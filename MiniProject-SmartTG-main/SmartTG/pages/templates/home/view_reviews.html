@@ -1,0 +1,25 @@
+{% extends 'Navbar/nav.html' %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4 text-primary">{{ place.name }} - Reviews</h2>
+
+  {% if reviews %}
+    {% for review in reviews %}
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ review.user.username }}</h5>
+          <p class="card-text text-warning">⭐ {{ review.rating }}/5</p>
+          <p class="card-text">{{ review.comment }}</p>
+          <p class="text-muted small">{{ review.created_at|date:"F j, Y, g:i a" }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-center text-muted">No reviews yet. Be the first to write one!</p>
+  {% endif %}
+
+  <div class="text-center mt-4">
+    <a href="{% url 'place_detail' place.id %}" class="btn btn-outline-primary">← Back to {{ place.name }}</a>
+  </div>
+</div>
+{% endblock %}

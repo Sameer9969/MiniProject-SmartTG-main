@@ -1,0 +1,135 @@
+{% extends 'Navbar/nav.html' %}
+{% load static %}
+{% block title %}About Us - MyTourist{% endblock %}
+
+{% block content %}
+<main class="container-fluid py-5 about-bg">
+
+  <div class="container">
+
+    <!-- Hero Section -->
+    <section class="row align-items-center mb-5">
+      <div class="col-lg-12 text-center">
+        <h1 class="display-5 fw-bold mb-3 text-dark">About MyTourist</h1>
+        <p class="lead mb-4 text-dark">
+          We connect curious travelers with unforgettable experiences — thoughtful itineraries,
+          trusted local guides, and handpicked stays. Our mission is simple: make travel meaningful,
+          accessible, and responsible.
+        </p>
+        <p class="text-dark">
+          Created as a <strong>college mini project</strong>, MyTourist is a student-built platform that blends
+          creativity, technology, and a shared passion for travel. It represents our teamwork,
+          innovation, and dedication to learning real-world web development.
+        </p>
+        <a href="{% url 'contact' %}" class="btn btn-primary mt-3">Get in Touch</a>
+      </div>
+    </section>
+
+    <!-- Mission / Vision / Promise -->
+    <section class="row text-center mb-5">
+      <div class="col-md-4 mb-3">
+        <div class="p-4 h-100 border rounded-4 glass-card">
+          <h3 class="h5 fw-semibold text-dark">Our Mission</h3>
+          <p class="mb-0 text-dark">To use technology and design to make travel planning smooth and enjoyable.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="p-4 h-100 border rounded-4 glass-card">
+          <h3 class="h5 fw-semibold text-dark">Our Vision</h3>
+          <p class="mb-0 text-dark">To build a simple, beautiful travel platform that inspires exploration and curiosity.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="p-4 h-100 border rounded-4 glass-card">
+          <h3 class="h5 fw-semibold text-dark">Our Promise</h3>
+          <p class="mb-0 text-dark">To keep learning, experimenting, and improving through teamwork and innovation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How We Built It -->
+    <section class="mb-5">
+      <div class="row gx-4 align-items-center">
+        <div class="col-md-12 text-center">
+          <h2 class="h3 fw-bold text-dark mb-3">How We Built It</h2>
+          <p class="text-dark">
+            MyTourist was developed as part of our B.Tech coursework using modern web technologies and
+            strong collaboration. Our focus was on user experience, responsive design, and simplicity.
+          </p>
+          <ul class="list-unstyled text-dark d-inline-block text-start">
+            <li>✔ Developed using Django (Python) and Bootstrap.</li>
+            <li>✔ Designed for all screen sizes with a clean, minimal interface.</li>
+            <li>✔ Created with teamwork, learning, and innovation in mind.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="mb-5">
+      <h2 class="h3 fw-bold mb-3 text-center text-dark">Meet the Team</h2>
+      <div class="row g-3 justify-content-center text-center">
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="p-3 rounded-4 glass-card">
+            <h6 class="mb-0 fw-semibold text-dark">Raxit Tripathi</h6>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="p-3 rounded-4 glass-card">
+            <h6 class="mb-0 fw-semibold text-dark">Sameer Singh</h6>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="p-3 rounded-4 glass-card">
+            <h6 class="mb-0 fw-semibold text-dark"> Vishweshwar Bhatnagar 
+</h6>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="p-3 rounded-4 glass-card">
+            <h6 class="mb-0 fw-semibold text-dark">Satyam</h6>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guide Section -->
+    <section class="mb-5 text-center">
+      <div class="p-4 rounded-4 glass-card d-inline-block">
+        <h4 class="fw-bold text-dark mb-1">Guided By</h4>
+        <p class="mb-0 fs-5 text-dark"><strong>Dr. Monika Nagar</strong></p>
+      </div>
+    </section>
+
+    <!-- Thank You -->
+    <section class="py-4 bg-light rounded-4 text-center glass-card">
+      <h3 class="h5 mb-2 text-dark">Thank You for Visiting!</h3>
+      <p class="mb-3 text-dark">We hope you liked our project and the effort we put into creating it.</p>
+      <a href="{% url 'home' %}" class="btn btn-outline-primary me-2">Go to Home</a>
+      <a href="{% url 'contact' %}" class="btn btn-primary">Contact Us</a>
+    </section>
+
+  </div>
+</main>
+
+<!-- Page Style -->
+<style>
+  .about-bg {
+    background-image: url("{% static 'images/smooth_bg.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .glass-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+</style>
+{% endblock %}

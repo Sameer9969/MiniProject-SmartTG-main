@@ -1,0 +1,155 @@
+{% extends 'Navbar/nav.html' %}
+{% load static %}
+
+{% block title %}Contact Us - My Tourist{% endblock %}
+
+{% block content %}
+<div class="container py-5 mb-5">
+  <!-- Inline hover styles (kept small) -->
+  <style>
+    /* Card lift */
+    .hover-lift {
+      transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s;
+      will-change: transform;
+    }
+    .hover-lift:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 18px 40px rgba(13,71,161,0.12);
+    }
+
+    /* Icon circle scale + gradient on hover */
+    .icon-circle {
+      transition: transform .28s ease, background .28s ease, color .28s ease;
+    }
+    .icon-circle:hover {
+      transform: scale(1.08);
+      background: linear-gradient(135deg, #1E90FF, #FF9800);
+      color: #fff !important;
+      box-shadow: 0 8px 24px rgba(30,144,255,0.12);
+    }
+
+    /* Send button glow */
+    .send-btn {
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .send-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(51,156,255,0.18);
+    }
+
+    /* Small responsive tweak for icon size */
+    @media (max-width: 576px) {
+      .rounded-icon-80 { width: 64px; height: 64px; font-size: 1.4rem; }
+    }
+  </style>
+
+  <!-- Heading -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary">
+      <i class="bi bi-telephone-fill"></i> Contact Us
+    </h2>
+    <p class="text-muted">
+      We’re here to help you with your travel plans and emergencies anytime, anywhere.
+    </p>
+  </div>
+
+  <!-- Emergency Cards -->
+  <div class="row g-4 text-center">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 p-4 rounded-4 hover-lift">
+        <div class="bg-light text-danger rounded-circle mx-auto mb-3 d-flex justify-content-center align-items-center rounded-icon-80 icon-circle" style="width:80px; height:80px;">
+          <i class="bi bi-shield-fill-exclamation display-6"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Police Helpline</h5>
+        <a href="tel:112" class="text-primary fw-semibold fs-5 text-decoration-none">112</a>
+        <p class="text-muted mt-2 small">Available 24/7 for any emergency or complaint.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 p-4 rounded-4 hover-lift">
+        <div class="bg-light text-danger rounded-circle mx-auto mb-3 d-flex justify-content-center align-items-center rounded-icon-80 icon-circle" style="width:80px; height:80px;">
+          <i class="bi bi-heart-pulse-fill display-6"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Ambulance</h5>
+        <a href="tel:108" class="text-primary fw-semibold fs-5 text-decoration-none">108</a>
+        <p class="text-muted mt-2 small">Call immediately for medical emergencies.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 p-4 rounded-4 hover-lift">
+        <div class="bg-light text-warning rounded-circle mx-auto mb-3 d-flex justify-content-center align-items-center rounded-icon-80 icon-circle" style="width:80px; height:80px;">
+          <i class="bi bi-fire display-6"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Fire Brigade</h5>
+        <a href="tel:101" class="text-primary fw-semibold fs-5 text-decoration-none">101</a>
+        <p class="text-muted mt-2 small">Reach out for any fire or rescue emergency.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <hr class="my-5 border-primary" style="width:60%; margin:auto;">
+
+  <!-- Contact Info -->
+  <div class="text-center mb-5">
+    <h5 class="fw-bold text-primary"><i class="bi bi-headset"></i> Our Support</h5>
+    <p class="fs-5 text-dark mb-1"><i class="bi bi-telephone text-dark"></i> +91 95402 53281</p>
+    <p class="fs-5 text-dark"><i class="bi bi-envelope text-dark"></i> MyTourist@gmail.com</p>
+  </div>
+
+  <!-- Contact Form -->
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0 rounded-4 p-4 hover-lift">
+        <h4 class="fw-bold text-center mb-4 text-primary">Send Us a Message</h4>
+
+        {% if messages %}
+          {% for message in messages %}
+            {% if "contact" in message.tags %}
+              <div class="text-center mb-3">
+                <div class="bg-success bg-opacity-10 rounded-circle mx-auto d-flex justify-content-center align-items-center" style="width:90px; height:90px;">
+                  <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                </div>
+                <div class="alert alert-success fw-semibold mt-3 mb-0">{{ message }}</div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Your Name</label>
+            {{ form.name }}
+            {% for error in form.name.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email Address</label>
+            {{ form.email }}
+            {% for error in form.email.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Message</label>
+            {{ form.message }}
+            {% for error in form.message.errors %}
+              <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5 rounded-pill shadow-sm send-btn">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

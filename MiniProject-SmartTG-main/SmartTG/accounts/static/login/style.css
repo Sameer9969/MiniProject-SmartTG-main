@@ -1,0 +1,23 @@
+body{
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+body {
+  background-image: url("/static/background_images/images/smooth_bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+        /* Optional overlay for better contrast */
+ body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: -1;
+ }

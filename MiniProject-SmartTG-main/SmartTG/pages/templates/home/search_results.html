@@ -1,0 +1,31 @@
+{% extends 'Navbar/nav.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <h3 class="fw-bold mb-4">
+    Search Results for "<span class="text-success">{{ query }}</span>"
+  </h3>
+
+  {% if results %}
+    <div class="row">
+      {% for place in results %}
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <img src="{{ place.image.url }}" class="card-img-top" alt="{{ place.name }}">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">{{ place.name }}</h5>
+              <p class="card-text text-muted small">{{ place.description|truncatewords:20 }}</p>
+              <a href="{% url 'place_detail' place.id %}" class="btn btn-outline-success btn-sm">
+                View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No places found matching your search.</p>
+  {% endif %}
+</div>
+{% endblock %}

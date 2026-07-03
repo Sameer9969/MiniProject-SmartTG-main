@@ -1,0 +1,84 @@
+{% extends 'Navbar/nav.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5" style="max-width:700px;">
+    <h2 class="mb-4 text-center">Edit Profile</h2>
+
+    <!-- Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Profile Photo -->
+        <div class="mb-3 text-center">
+            {% if form.instance.photo %}
+                <img src="{{ form.instance.photo.url }}" alt="Profile Photo" class="rounded-circle mb-2" style="width:120px; height:120px; object-fit:cover;">
+            {% else %}
+                <img src="{% static 'images/default_profile.png' %}" alt="Profile Photo" class="rounded-circle mb-2" style="width:120px; height:120px; object-fit:cover;">
+            {% endif %}
+            <div>
+                {{ form.photo.label_tag }}
+                {{ form.photo }}
+                {% if form.photo.errors %}
+                    <div class="text-danger">{{ form.photo.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Username -->
+        <div class="mb-3">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-danger">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-danger">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-3">
+            {{ form.gender.label_tag }}
+            {{ form.gender }}
+            {% if form.gender.errors %}
+                <div class="text-danger">{{ form.gender.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-3">
+            {{ form.phone.label_tag }}
+            {{ form.phone }}
+            {% if form.phone.errors %}
+                <div class="text-danger">{{ form.phone.errors }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Bio -->
+        <div class="mb-3">
+            {{ form.bio.label_tag }}
+            {{ form.bio }}
+            {% if form.bio.errors %}
+                <div class="text-danger">{{ form.bio.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-4">Save Profile</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

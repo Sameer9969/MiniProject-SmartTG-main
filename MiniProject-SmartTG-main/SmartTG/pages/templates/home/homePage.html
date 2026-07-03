@@ -1,0 +1,342 @@
+{% extends "Navbar/nav.html" %}
+{% load static %}
+{% block content %}
+
+
+<!-- 👋 Greeting Section -->
+<div class="container my-3 text-center">
+  <h4 class="fw-semibold" style="
+        background: linear-gradient(90deg, #ffffff, #000000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.8rem;
+        font-weight: 600;
+    ">
+    Hello, welcome {% if user.is_authenticated %}{{ user.username }}{% else %}User{% endif %}
+  </h4>
+</div>
+
+
+<!-- 🌤️ Weather Section -->
+<div class="container my-3 py-3 d-flex justify-content-center">
+  <div class="weather-card shadow-lg p-4 rounded-4 w-75" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
+    <h3 class="text-center mb-4 fw-bold text-dark">🌤️ Check Local Weather</h3>
+
+    <div class="row mb-3">
+      <div class="col-md-6 mb-3">
+        <select id="state" class="form-select">
+  <option value="">Select State</option>
+
+  <!-- 🇮🇳 States -->
+  <option value="Andhra Pradesh">Andhra Pradesh</option>
+  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+  <option value="Assam">Assam</option>
+  <option value="Bihar">Bihar</option>
+  <option value="Chhattisgarh">Chhattisgarh</option>
+  <option value="Goa">Goa</option>
+  <option value="Gujarat">Gujarat</option>
+  <option value="Haryana">Haryana</option>
+  <option value="Himachal Pradesh">Himachal Pradesh</option>
+  <option value="Jharkhand">Jharkhand</option>
+  <option value="Karnataka">Karnataka</option>
+  <option value="Kerala">Kerala</option>
+  <option value="Madhya Pradesh">Madhya Pradesh</option>
+  <option value="Maharashtra">Maharashtra</option>
+  <option value="Manipur">Manipur</option>
+  <option value="Meghalaya">Meghalaya</option>
+  <option value="Mizoram">Mizoram</option>
+  <option value="Nagaland">Nagaland</option>
+  <option value="Odisha">Odisha</option>
+  <option value="Punjab">Punjab</option>
+  <option value="Rajasthan">Rajasthan</option>
+  <option value="Sikkim">Sikkim</option>
+  <option value="Tamil Nadu">Tamil Nadu</option>
+  <option value="Telangana">Telangana</option>
+  <option value="Tripura">Tripura</option>
+  <option value="Uttar Pradesh">Uttar Pradesh</option>
+  <option value="Uttarakhand">Uttarakhand</option>
+  <option value="West Bengal">West Bengal</option>
+
+  <!-- 🏛️ Union Territories -->
+  <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+  <option value="Chandigarh">Chandigarh</option>
+  <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+  <option value="Delhi">Delhi</option>
+  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+  <option value="Ladakh">Ladakh</option>
+  <option value="Lakshadweep">Lakshadweep</option>
+  <option value="Puducherry">Puducherry</option>
+</select>
+
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <select id="city" class="form-select">
+          <option value="">Select City</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button id="getWeather" class="btn btn-primary px-4 fw-semibold">Get Weather</button>
+    </div>
+
+    <div class="weather-result text-center mt-4" id="result"></div>
+  </div>
+</div>
+
+<!-- 🏞️ Places Section -->
+<div class="container my-5">
+  <h2 class="text-center fw-bold mb-4" style="color:#0d47a1;">🌍 Explore Beautiful Destinations</h2>
+
+  <div class="row g-4">
+    {% for place in places %}
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100 rounded-4 overflow-hidden hover-zoom">
+
+          {% if place.image %}
+            <img src="{{ place.image.url }}" class="card-img-top" alt="{{ place.name }}" style="height: 230px; object-fit: cover;">
+          {% else %}
+            <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="No image">
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title fw-semibold text-dark">{{ place.name }}</h5>
+            <p class="card-text text-muted small mb-3">{{ place.short_description|truncatewords:15 }}</p>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="{% url 'place_detail' place.id %}" class="btn btn-outline-primary btn-sm fw-semibold">
+  View Details
+</a>
+
+
+              {% if user.is_authenticated %}
+                {% if place.id in wishlist_places %}
+                  <a href="{% url 'remove_from_wishlist' place.id %}" class="btn btn-danger btn-sm fw-semibold">❤️ Remove</a>
+                {% else %}
+                  <a href="{% url 'add_to_wishlist' place.id %}" class="btn btn-outline-danger btn-sm fw-semibold">🤍 Wishlist</a>
+                {% endif %}
+              {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm fw-semibold">Login to Wishlist</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsible Detail Section -->
+        <div class="collapse mt-3" id="place-{{ place.id }}">
+          <div class="card shadow-lg border-0 rounded-4 p-3">
+            <div class="row">
+              <div class="col-md-6">
+                {% if place.image %}
+                  <img src="{{ place.image.url }}" class="img-fluid rounded-4 mb-3" alt="{{ place.name }}">
+                {% else %}
+                  <img src="{% static 'images/no-image.jpg' %}" class="img-fluid rounded-4 mb-3" alt="No image">
+                {% endif %}
+              </div>
+              <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h4 class="fw-bold text-dark">{{ place.name }}</h4>
+                <p class="text-muted">{{ place.description }}</p>
+
+                {% if user.is_authenticated %}
+                  {% if place.id in wishlist_places %}
+                    <a href="{% url 'remove_from_wishlist' place.id %}" class="btn btn-danger fw-semibold mt-2">❤️ Remove from Wishlist</a>
+                  {% else %}
+                    <a href="{% url 'add_to_wishlist' place.id %}" class="btn btn-outline-danger fw-semibold mt-2">🤍 Add to Wishlist</a>
+                  {% endif %}
+                {% else %}
+                  <a href="{% url 'login' %}" class="btn btn-outline-secondary fw-semibold mt-2">Login to Wishlist</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    {% empty %}
+      <p class="text-center text-muted">No tourist places added yet.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- 🌈 Styles -->
+<style>
+  body {
+    background-color: #f5faff;
+    font-family: 'Poppins', sans-serif;
+  }
+  .hover-zoom {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-zoom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  .collapse .card {
+    background: linear-gradient(135deg, #ffffff, #f3f8ff);
+  }
+  .weather-card h3, .weather-result h4, .weather-result p {
+    color: black;
+  }
+</style>
+
+<!-- 🌦️ Weather Script -->
+<script>
+  const cities = {
+  "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Rajahmundry", "Anantapur"],
+  "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Tawang", "Pasighat", "Ziro", "Bomdila"],
+  "Assam": ["Guwahati", "Dibrugarh", "Silchar", "Jorhat", "Tezpur", "Tinsukia"],
+  "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Purnia", "Darbhanga"],
+  "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba", "Durg", "Rajnandgaon"],
+  "Goa": ["Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda"],
+  "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Junagadh", "Gandhinagar"],
+  "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Hisar", "Karnal", "Sonipat"],
+  "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Solan", "Mandi", "Hamirpur", "Kullu"],
+  "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh", "Deoghar"],
+  "Karnataka": ["Bengaluru", "Mysuru", "Mangalore", "Hubballi", "Belagavi", "Davangere", "Ballari", "Udupi"],
+  "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Alappuzha", "Kottayam", "Palakkad"],
+  "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Rewa"],
+  "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Thane", "Aurangabad", "Solapur", "Kolhapur"],
+  "Manipur": ["Imphal", "Thoubal", "Kakching", "Churachandpur", "Bishnupur"],
+  "Meghalaya": ["Shillong", "Tura", "Jowai", "Nongpoh", "Baghmara"],
+  "Mizoram": ["Aizawl", "Lunglei", "Champhai", "Serchhip", "Kolasib"],
+  "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha"],
+  "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Sambalpur", "Puri", "Balasore", "Berhampur"],
+  "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Mohali", "Hoshiarpur"],
+  "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Ajmer", "Bikaner", "Alwar", "Bharatpur"],
+  "Sikkim": ["Gangtok", "Namchi", "Gyalshing", "Mangan", "Ravangla"],
+  "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Erode", "Tirunelveli", "Vellore"],
+  "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Ramagundam"],
+  "Tripura": ["Agartala", "Udaipur", "Dharmanagar", "Kailashahar", "Belonia"],
+  "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Ghaziabad", "Noida", "Agra", "Prayagraj", "Meerut", "Bareilly", "Aligarh"],
+  "Uttarakhand": ["Dehradun", "Haridwar", "Rishikesh", "Nainital", "Haldwani", "Roorkee", "Kashipur"],
+  "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Siliguri", "Asansol", "Kharagpur", "Malda"],
+
+  // 🏛️ Union Territories
+  "Andaman and Nicobar Islands": ["Port Blair", "Car Nicobar", "Havelock Island", "Mayabunder"],
+  "Chandigarh": ["Chandigarh"],
+  "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Diu", "Silvassa"],
+  "Delhi": ["New Delhi"],
+  "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla", "Kathua"],
+  "Ladakh": ["Leh", "Kargil"],
+  "Lakshadweep": ["Kavaratti", "Agatti", "Minicoy", "Amini"],
+  "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"]
+};
+
+
+  document.getElementById("state").addEventListener("change", function () {
+    const state = this.value;
+    const citySelect = document.getElementById("city");
+    citySelect.innerHTML = '<option value="">Select City</option>';
+    if (cities[state]) {
+      cities[state].forEach(city => {
+        const opt = document.createElement("option");
+        opt.value = city;
+        opt.textContent = city;
+        citySelect.appendChild(opt);
+      });
+    }
+  });
+
+  document.getElementById("getWeather").addEventListener("click", function () {
+    const city = document.getElementById("city").value;
+    if (!city) return alert("Please select a city first!");
+
+    const resultEl = document.getElementById("result");
+    resultEl.innerHTML = `<p>Loading weather for <strong>${city}</strong>…</p>`;
+
+    // Replace with your API key or better: call your backend which proxies the API key
+    const API_KEY = "3750d03a007595862ecce434e5ecb768";
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`)
+      .then(response => {
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        return response.json();
+      })
+      .then(d => {
+        if (!d || !d.main) throw new Error("Invalid weather data");
+        const t = d.main.temp;
+        const c = (d.weather && d.weather[0] && d.weather[0].description) ? d.weather[0].description : "";
+        const m = getWeatherMessage(t, c);
+        resultEl.innerHTML = `
+          <div class="emoji fs-1">${m.icon}</div>
+          <h4 class="fw-bold mt-2">${city}</h4>
+          <p>${t}°C, ${c}</p>
+          <p><strong>${m.text}</strong></p>`;
+      })
+      .catch(err => {
+        console.error("Weather fetch failed:", err);
+        resultEl.innerHTML = "<p class='text-danger'>❌ Unable to fetch weather. Check console for details.</p>";
+      });
+  });
+
+  function getWeatherMessage(temp, cond) {
+    const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const c = (cond || "").toLowerCase();
+
+    if (c.includes("rain") || c.includes("drizzle") || c.includes("shower")) {
+      return {
+        icon: "🌧️",
+        text: random([
+          "Rain’s here! Coffee time ☕",
+          "Grab your umbrella ☂️, it’s raining!",
+          "Rainy mood? Let’s chill with some music 🎶",
+          "Perfect day for a book and a blanket 📖",
+          "Rain + cosy socks = perfect combo 🧦"
+        ]),
+      };
+    }
+
+    if (temp < 15) {
+      return {
+        icon: "❄️",
+        text: random([
+          "Cold! Coffee sounds good ☕",
+          "Chilly vibes — don’t forget your jacket 🧥",
+          "Perfect time for hot chocolate 🍫",
+          "Brrr… stay warm out there 🔥",
+          "Layer up — and maybe a warm scarf 🧣"
+        ]),
+      };
+    }
+
+    if (temp < 25) {
+      return {
+        icon: "🌤️",
+        text: random([
+          "Perfect weather outside!",
+          "Lovely day for a walk 🌿",
+          "Enjoy the breeze — it’s just right 🌬️",
+          "Nature’s in a good mood today 🌸",
+          "Great day to snap some photos 📸"
+        ]),
+      };
+    }
+
+    if (temp < 35) {
+      return {
+        icon: "☀️",
+        text: random([
+          "Stay hydrated 💧",
+          "Sunny vibes all around ☀️",
+          "Put on those sunglasses 🕶️",
+          "Don’t forget sunscreen! 🧴",
+          "Perfect for iced coffee ☕❄️"
+        ]),
+      };
+    }
+
+    return {
+      icon: "🔥",
+      text: random([
+        "Too hot! Stay cool 🧊",
+        "It’s scorching! Keep indoors if you can 🏠",
+        "The sun’s on beast mode 🌞",
+        "Summer mode: ON 🌴",
+        "Time for a cold shower 🚿"
+      ]),
+    };
+  }
+</script>
+
+{% endblock %}
